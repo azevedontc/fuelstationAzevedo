@@ -1,0 +1,4 @@
+GasolinaComum 7.27
+GasolinaAditivada 7.32
+Etanol 5.99
+Fila 5
