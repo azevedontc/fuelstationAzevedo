@@ -5,13 +5,13 @@
 #include "function.h"
 #include "header.h"
 
-// CÓDIGO FINAL 100% ATUALIZADO
+// último código
 
 int main()
 {
     // variáveis gerais
     int quant = 0, tam = 0;
-    int opcao, opcaoC = 0;
+    int opcao, opcaoC = 0, i = 0;
     // cálculo dos combustíveis
     int valorG = 0, valorGA = 0, valorE = 0;
     // quantidade em litros dos combustíveis
@@ -29,51 +29,14 @@ int main()
     int tanqueG = 200, tanqueGA = 200, tanqueE = 200;
     //------------------------------
     //------------------------------
-    //------------------------------
-    // busca valores no arquivo config.txt
-    FILE *arqv;
-    char ch;
-    char palavra[80];
-    char aux[80];
-    float preco;
-
-    arqv = fopen("config.txt", "r");
-
-    while (!feof(arqv))
-    {
-        fscanf(arqv, "%s", palavra);
-        if (strcmp(palavra, "GasolinaComum") == 0)
-        {
-            fscanf(arqv, "%[0-9 .]", palavra);
-            sscanf(palavra, "%[0-9 .]", aux);
-            preco = atof(aux);
-            gasolina = preco;
-        }
-        if (strcmp(palavra, "GasolinaAditivada") == 0)
-        {
-            fscanf(arqv, "%[0-9 .]", palavra);
-            sscanf(palavra, "%[0-9 .]", aux);
-            preco = atof(aux);
-            aditivada = preco;
-        }
-        if (strcmp(palavra, "Etanol") == 0)
-        {
-            fscanf(arqv, "%[0-9 .]", palavra);
-            sscanf(palavra, "%[0-9 .]", aux);
-            preco = atof(aux);
-            etanol = preco;
-        }
-
-        if (strcmp(palavra, "Fila") == 0)
-        {
-            fscanf(arqv, "%[0-9 .]", palavra);
-            sscanf(palavra, "%[0-9 .]", aux);
-            preco = atof(aux);
-            tam = preco;
-        }
-    }
-    fclose(arqv);
-    //------------------------------
+    gasolina = otimiza("GasolinaComum");
+    aditivada = otimiza("GasolinaAditivada");
+    etanol = otimiza("Etanol");
+    tam = otimiza("Fila");
+    valida(gasolina, "Gasolina Comum");
+    valida(aditivada, "Gasolina Aditivada");
+    valida(etanol, "Etanol");
+    valida(tam, "Fila");
     //------------------------------
     //------------------------------
     // introdução posto
@@ -116,14 +79,15 @@ int main()
     // menu
     printf(C_BLUE "\n\n 1 - Adicionar um carro na fila\n" C_RESET);
     printf(C_BLUE "\n 2 - Abastecimento\n" C_RESET);
-    printf(C_BLUE "\n 3 - Chamar o proximo\n" C_RESET);
-    printf(C_BLUE "\n 4 - Relatorios\n" C_RESET);
+    printf(C_BLUE "\n 3 - Chamar o próximo\n" C_RESET);
+    printf(C_BLUE "\n 4 - Relatórios\n" C_RESET);
     printf(C_BLUE "\n 5 - Carro atual da fila\n" C_RESET);
-    printf(C_BLUE "\n 6 - Encerrar\n" C_RESET);
+    printf(C_BLUE "\n 6 - Todos os carros da fila\n" C_RESET);
+    printf(C_BLUE "\n 7 - Encerrar\n" C_RESET);
     scanf("%d", &opcao);
     struct MCarro *carro1;
     carro1 = (struct MCarro *)malloc(tam * sizeof(struct MCarro));
-    while (opcao != 6)
+    while (opcao != 7)
     {
         switch (opcao)
         {
@@ -148,125 +112,135 @@ int main()
             quant = op1(quant, tam);
             break;
         case 2:
-            printf(C_RED "\n Abastecimento\n" C_RESET);
-            printf(C_RED "\n Escolha seu combustivel\n" C_RESET);
-            printf(C_BLUE "\n 1 - Gasolina \n" C_RESET);
-            printf(C_BLUE "\n 2 - Gas. Aditivada \n" C_RESET);
-            printf(C_BLUE "\n 3 - Etanol \n" C_RESET);
-            scanf("%d", &opcaoC);
-            switch (opcaoC)
+            if (quant > 0)
             {
-            // abastecimento das bombas
-            case 1:
-                printf("\n Qual valor voce deseja abastecer ?: ");
-                scanf("%d", &valorG);
-                if (valorG <= 0)
+                printf(C_RED "\n Abastecimento\n" C_RESET);
+                printf(C_RED "\n Escolha seu combustível\n" C_RESET);
+                printf(C_BLUE "\n 1 - Gasolina \n" C_RESET);
+                printf(C_BLUE "\n 2 - Gas. Aditivada \n" C_RESET);
+                printf(C_BLUE "\n 3 - Etanol \n" C_RESET);
+                scanf("%d", &opcaoC);
+                switch (opcaoC)
                 {
-                    printf("\n Escolha um valor acima de 0 !\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
+                // abastecimento das bombas
+                case 1:
+                    printf("\n Qual valor você deseja abastecer ?: ");
                     scanf("%d", &valorG);
-                }
-                valorGtotal = valorG / gasolina;
-                // total de litros
-                aux1G = valorGtotal;
-                totalLitroG = totalLitroG + aux1G;
-                // valor arrecadado relatórios
-                auxG = valorG;
-                totalVendG = totalVendG + auxG;
-                if (valorGtotal > 200)
-                {
-                    printf("\n O posto so abastece ate 200 litros, es colha outra quantia.\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
-                    scanf("%d", &valorG);
+                    if (valorG <= 0)
+                    {
+                        printf("\n Escolha um valor acima de 0 !\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorG);
+                    }
                     valorGtotal = valorG / gasolina;
-                }
-                printf("\n Vamos abastecer: %f litros\n", valorGtotal);
-                // tanque
-                tanqueG = tanqueG - valorGtotal;
-                if (tanqueG <= 0)
-                {
-                    printf("\n Nao ha combustivel suficiente ! %d\n", tanqueG);
-                }
-                break;
-            case 2:
-                printf("\n Qual valor voce deseja abastecer ?: ");
-                scanf("%d", &valorGA);
-                if (valorGA <= 0)
-                {
-                    printf("\n Escolha um valor acima de 0 !\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
+                    // total de litros
+                    aux1G = valorGtotal;
+                    totalLitroG = totalLitroG + aux1G;
+                    // valor arrecadado relatórios
+                    auxG = valorG;
+                    totalVendG = totalVendG + auxG;
+                    if (valorGtotal > 200)
+                    {
+                        printf("\n O posto só abastece até 200 litros, escolha outra quantia.\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorG);
+                        valorGtotal = valorG / gasolina;
+                    }
+                    printf("\n Vamos abastecer: %.2f litros\n", valorGtotal);
+                    // tanque
+                    tanqueG = tanqueG - valorGtotal;
+                    if (tanqueG <= 0)
+                    {
+                        printf("\n Não há combustível suficiente ! %d\n", tanqueG);
+                    }
+                    break;
+                case 2:
+                    printf("\n Qual valor você deseja abastecer ?: ");
                     scanf("%d", &valorGA);
-                }
-                valorGAtotal = valorGA / aditivada;
-                // total de litros
-                aux1GA = valorGAtotal;
-                totalLitroGA = totalLitroGA + aux1GA;
-                // valor arrecadado relatórios
-                auxGA = valorGA;
-                totalVendGA = totalVendGA + auxGA;
-                if (valorGAtotal > 200)
-                {
-                    printf("\n O posto so abastece ate 200 litros, escolha outra quantia.\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
-                    scanf("%d", &valorGA);
-                    valorGtotal = valorGA / aditivada;
-                }
-                printf("\n Vamos abastecer: %f litros\n", valorGAtotal);
-                // tanque
-                tanqueGA = tanqueGA - valorGAtotal;
-                if (tanqueGA <= 0)
-                {
-                    printf("\n Nao ha combustivel suficiente ! %d\n", tanqueGA);
-                }
-                break;
-            case 3:
-                printf("\n Qual valor voce deseja abastecer ?: ");
-                scanf("%d", &valorE);
-                if (valorE <= 0)
-                {
-                    printf("\n Escolha um valor acima de 0 !\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
+                    if (valorGA <= 0)
+                    {
+                        printf("\n Escolha um valor acima de 0 !\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorGA);
+                    }
+                    valorGAtotal = valorGA / aditivada;
+                    // total de litros
+                    aux1GA = valorGAtotal;
+                    totalLitroGA = totalLitroGA + aux1GA;
+                    // valor arrecadado relatórios
+                    auxGA = valorGA;
+                    totalVendGA = totalVendGA + auxGA;
+                    if (valorGAtotal > 200)
+                    {
+                        printf("\n O posto só abastece até 200 litros, escolha outra quantia.\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorGA);
+                        valorGtotal = valorGA / aditivada;
+                    }
+                    printf("\n Vamos abastecer: %.2f litros\n", valorGAtotal);
+                    // tanque
+                    tanqueGA = tanqueGA - valorGAtotal;
+                    if (tanqueGA <= 0)
+                    {
+                        printf("\n Não há combustível suficiente ! %d\n", tanqueGA);
+                    }
+                    break;
+                case 3:
+                    printf("\n Qual valor você deseja abastecer ?: ");
                     scanf("%d", &valorE);
-                }
-                valorEtotal = valorE / etanol;
-                // total de litros
-                aux1E = valorEtotal;
-                totalLitroE = totalLitroE + aux1E;
-                // valor arrecadado relatórios
-                auxE = valorE;
-                totalVendE = totalVendE + auxE;
-                if (valorEtotal > 200)
-                {
-                    printf("\n O posto so abastece ate 200 litros, escolha outra quantia.\n");
-                    printf("\n Qual valor voce deseja abastecer ?: ");
-                    scanf("%d", &valorE);
+                    if (valorE <= 0)
+                    {
+                        printf("\n Escolha um valor acima de 0 !\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorE);
+                    }
                     valorEtotal = valorE / etanol;
+                    // total de litros
+                    aux1E = valorEtotal;
+                    totalLitroE = totalLitroE + aux1E;
+                    // valor arrecadado relatórios
+                    auxE = valorE;
+                    totalVendE = totalVendE + auxE;
+                    if (valorEtotal > 200)
+                    {
+                        printf("\n O posto só abastece até 200 litros, escolha outra quantia.\n");
+                        printf("\n Qual valor você deseja abastecer ?: ");
+                        scanf("%d", &valorE);
+                        valorEtotal = valorE / etanol;
+                    }
+                    printf("\n Vamos abastecer: %.2f litros\n", valorEtotal);
+                    // tanque
+                    tanqueE = tanqueE - valorEtotal;
+                    if (tanqueE <= 0)
+                    {
+                        printf("\n Não há combustível suficiente ! %d\n", tanqueE);
+                    }
+                    break;
+                    /*default:
+                        printf("Voce deve escolher uma opcao valida\n");
+                        printf("Pressione qualquer tecla para voltar ao menu\n");
+                        break;*/
                 }
-                printf("\n Vamos abastecer: %f litros\n", valorEtotal);
-                // tanque
-                tanqueE = tanqueE - valorEtotal;
-                if (tanqueE <= 0)
-                {
-                    printf("\n Nao ha combustivel suficiente ! %d\n", tanqueE);
-                }
-                break;
-                /*default:
-                    printf("Voce deve escolher uma opcao valida\n");
-                    printf("Pressione qualquer tecla para voltar ao menu\n");
-                    break;*/
+            }
+            else
+            {
+                printf("\n Não tem carro na fila para abastecer !\n");
             }
             break;
         case 3:
-            atendidos++;
             limpaBuffer();
-            printf(C_RED "\n Carro fora da fila\n" C_RESET);
-            printf("\n Modelo do carro que foi removido: %s \n", carro1[0].modelo);
-            printf(" Marca do carro que foi removido: %s \n", carro1[0].marca);
-            printf(" Ano do carro que foi removido: %d \n", carro1[0].ano);
-            printf(" Tamando do tanque do carro que foi removido: %d \n", carro1[0].tanque);
-            for (int i = 0; i < quant; i++)
+            if (quant > 0)
             {
-                carro1[i] = carro1[i + 1];
+                atendidos++;
+                printf(C_RED "\n Carro fora da fila\n" C_RESET);
+                printf("\n Modelo do carro que foi removido: %s \n", carro1[0].modelo);
+                printf(" Marca do carro que foi removido: %s \n", carro1[0].marca);
+                printf(" Ano do carro que foi removido: %d \n", carro1[0].ano);
+                printf(" Tamando do tanque do carro que foi removido: %d \n", carro1[0].tanque);
+                for (int i = 0; i < quant; i++)
+                {
+                    carro1[i] = carro1[i + 1];
+                }
             }
             // função op3
             quant = op3(quant, tam);
@@ -276,18 +250,18 @@ int main()
             while (opcaoR != 5)
             {
                 // menu relatórios
-                printf(C_RED "\n Relatorios\n" C_RESET);
-                printf(C_BLUE "\n 1 - Quantidade de litros vendida (por tipo de combustivel)\n" C_RESET);
-                printf(C_BLUE "\n 2 - Total arrecadado com as vendas (por combustivel)\n" C_RESET);
+                printf(C_RED "\n Relatórios\n" C_RESET);
+                printf(C_BLUE "\n 1 - Quantidade de litros vendida (por tipo de combustível)\n" C_RESET);
+                printf(C_BLUE "\n 2 - Total arrecadado com as vendas (por combustível)\n" C_RESET);
                 printf(C_BLUE "\n 3 - Quantidade de carros atendidos\n" C_RESET);
                 printf(C_BLUE "\n 4 - Quantidade de combustível restante em cada tanque\n" C_RESET);
-                printf(C_BLUE "\n 5 - Sair de Relatorios\n" C_RESET);
+                printf(C_BLUE "\n 5 - Sair de Relatórios\n" C_RESET);
                 scanf("%d", &opcaoR);
                 // escolha do relatório
                 switch (opcaoR)
                 {
                 case 1:
-                    printf(C_RED "\n\n Quantidade de litros vendida (por tipo de combustivel)\n" C_RESET);
+                    printf(C_RED "\n\n Quantidade de litros vendida (por tipo de combustível)\n" C_RESET);
                     printf(C_BLUE "\n 1 - Gasolina \n" C_RESET);
                     printf(C_BLUE "\n 2 - Gas. Aditivada \n" C_RESET);
                     printf(C_BLUE "\n 3 - Etanol \n" C_RESET);
@@ -299,19 +273,19 @@ int main()
                         switch (opcaoRL)
                         {
                         case 1:
-                            printf("\n Gasolina vendeu um total de %f litros \n", totalLitroG);
+                            printf("\n Gasolina vendeu um total de %.2f litros \n", totalLitroG);
                             break;
                         case 2:
-                            printf("\n Gasolina Adit. vendeu um total de %f litros \n", totalLitroGA);
+                            printf("\n Gasolina Adit. vendeu um total de %.2f litros \n", totalLitroGA);
                             break;
                         case 3:
-                            printf("\n Etanol vendeu um total de %f litros \n", totalLitroE);
+                            printf("\n Etanol vendeu um total de %.2f litros \n", totalLitroE);
                             break;
                         case 4:
-                            printf("\n Voce pediu para sair. \n");
+                            printf("\n Você pediu para sair. \n");
                             break;
                         }
-                        printf("\n\n Quantidade de litros vendida (por tipo de combustivel)\n");
+                        printf("\n\n Quantidade de litros vendida (por tipo de combustível)\n");
                         printf("\n 1 - Gasolina \n");
                         printf("\n 2 - Gas. Aditivada \n");
                         printf("\n 3 - Etanol \n");
@@ -320,7 +294,7 @@ int main()
                     }
                     break;
                 case 2:
-                    printf(C_RED "\n Total arrecadado com as vendas (por tipo de combustivel)\n" C_RESET);
+                    printf(C_RED "\n Total arrecadado com as vendas (por tipo de combustível)\n" C_RESET);
                     printf(C_BLUE "\n 1 - Gasolina \n" C_RESET);
                     printf(C_BLUE "\n 2 - Gas. Aditivada \n" C_RESET);
                     printf(C_BLUE "\n 3 - Etanol \n" C_RESET);
@@ -332,19 +306,19 @@ int main()
                         switch (opcaoRV)
                         {
                         case 1:
-                            printf("\n Gasolina vendeu um total de %d reais \n", totalVendG);
+                            printf("\n Gasolina vendeu um total de R$%d reais \n", totalVendG);
                             break;
                         case 2:
-                            printf("\n Gasolina Adit. vendeu um total de %d reais \n", totalVendGA);
+                            printf("\n Gasolina Adit. vendeu um total de R$%d reais \n", totalVendGA);
                             break;
                         case 3:
-                            printf("\n Etanol vendeu um total de %d reais \n", totalVendE);
+                            printf("\n Etanol vendeu um total de R$%d reais \n", totalVendE);
                             break;
                         case 4:
-                            printf("\n Voce pediu para sair.\n");
+                            printf("\n Você pediu para sair.\n");
                             break;
                         }
-                        printf(C_RED "\n Total arrecadado com as vendas (por tipo de combustivel)\n" C_RESET);
+                        printf(C_RED "\n Total arrecadado com as vendas (por tipo de combustível)\n" C_RESET);
                         printf(C_BLUE "\n 1 - Gasolina \n" C_RESET);
                         printf(C_BLUE "\n 2 - Gas. Aditivada \n" C_RESET);
                         printf(C_BLUE "\n 3 - Etanol \n" C_RESET);
@@ -356,16 +330,16 @@ int main()
                     printf("\n Quantidade de carros atendidos é igual a: %d \n", atendidos);
                     break;
                 case 4:
-                    printf(C_RED "\n Quantidade de combustiveis restante em cada tanque\n" C_RESET);
-                    printf(C_BLUE "\n Quantidade de combustivel restante de Gasolina: " C_RESET);
+                    printf(C_RED "\n Quantidade de combustíveis restante em cada tanque\n" C_RESET);
+                    printf(C_BLUE "\n Quantidade de combustível restante de Gasolina: " C_RESET);
                     printf("%d litros\n", tanqueG);
-                    printf(C_BLUE "\n Quantidade de combustivel restante de Gasolina Adit.: " C_RESET);
+                    printf(C_BLUE "\n Quantidade de combustível restante de Gasolina Adit.: " C_RESET);
                     printf("%d litros\n", tanqueGA);
-                    printf(C_BLUE "\n Quantidade de combustivel restante de Etanol: " C_RESET);
+                    printf(C_BLUE "\n Quantidade de combustível restante de Etanol: " C_RESET);
                     printf("%d litros\n", tanqueE);
                     break;
                 case 5:
-                    printf("\n Sair de relatorios \n");
+                    printf("\n Sair de relatórios \n");
                     break;
                 }
                 break;
@@ -379,23 +353,43 @@ int main()
             printf("\n Tamanho do tanque: %d", carro1[0].tanque);
             break;
         case 6:
-            printf("\n Voce pediu para sair.\n");
+            if (quant > 0)
+            {
+                i = 0;
+                printf(C_RED "\n Carros da fila:\n" C_RESET);
+                while (quant > i)
+                {
+                    printf("\n Modelo do carro: %s", carro1[i].modelo);
+                    printf("\n Marca do carro: %s", carro1[i].marca);
+                    printf("\n Ano do carro: %d", carro1[i].ano);
+                    printf("\n Tamanho do tanque: %d\n", carro1[i].tanque);
+                    i++;
+                }
+                i = 0;
+            }
+            else
+            {
+                printf("\n Não há carros na fila\n");
+            }
             break;
-
+        case 7:
+            printf("\n Você pediu para sair.\n");
+            break;
         default:
-            printf("\n Voce deve escolher uma opcao valida\n");
-            printf("Precione qualquer tecla para voltar ao menu\n");
+            printf("\n Você deve escolher uma opção válida\n");
+            printf("Pressione qualquer tecla para voltar ao menu\n");
         }
         printf(C_BLUE "\n\n 1 - Adicionar um carro na fila\n" C_RESET);
         printf(C_BLUE "\n 2 - Abastecimento\n" C_RESET);
-        printf(C_BLUE "\n 3 - Chamar o proximo\n" C_RESET);
-        printf(C_BLUE "\n 4 - Relatorios\n" C_RESET);
+        printf(C_BLUE "\n 3 - Chamar o próximo\n" C_RESET);
+        printf(C_BLUE "\n 4 - Relatórios\n" C_RESET);
         printf(C_BLUE "\n 5 - Carro atual da fila\n" C_RESET);
-        printf(C_BLUE "\n 6 - Encerrar\n" C_RESET);
+        printf(C_BLUE "\n 6 - Todos os carros da fila\n" C_RESET);
+        printf(C_BLUE "\n 7 - Encerrar\n" C_RESET);
         scanf("%d", &opcao);
     }
 
-    printf(C_GREEN "\n Posto Azevedo agradece sua preferencia !" C_RESET);
+    printf(C_GREEN "\n Posto Azevedo agradece sua preferência !" C_RESET);
 
     return 0;
 }
