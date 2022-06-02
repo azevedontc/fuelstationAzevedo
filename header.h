@@ -5,6 +5,8 @@
 #define C_MAGENTA "\x1b[35m"
 #define C_CYAN    "\x1b[36m"
 #define C_RESET   "\x1b[0m"
+float otimiza(char s[]);
+void valida(float a, char s[]);
 void imprimeMCarro();
 void lerString();
 void apagacarro1();
