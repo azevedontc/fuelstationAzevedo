@@ -6,6 +6,39 @@
 #define C_CYAN    "\x1b[36m"
 #define C_RESET   "\x1b[0m"
 
+float otimiza(char s[])
+{
+    // busca valores no arquivo config.txt
+    FILE *arqv;
+    char ch;
+    char palavra[80];
+    char aux[80];
+    float preco;
+
+    arqv = fopen("config.txt", "r");
+
+    while (!feof(arqv))
+    {
+        fscanf(arqv, "%s", palavra);
+        if (strcmp(palavra, s) == 0)
+        {
+            fscanf(arqv, "%[0-9 .]", palavra);
+            sscanf(palavra, "%[0-9 .]", aux);
+            preco = atof(aux);
+        }
+    }
+    fclose(arqv);
+    return preco;
+};
+
+void valida(float a, char s[])
+{
+    if (a == -1)
+    {
+        printf("Não encontrado valor do(a) %s", s);
+    }
+}
+
 struct MCarro
 {
     char modelo[30];
@@ -14,12 +47,14 @@ struct MCarro
     int tanque;
 };
 
+// não estou usando
 void imprimeMCarro(struct MCarro l)
 {
     printf("\nDados do carro:\n");
     printf("Modelo: %s \nMarca: %s \nAno: %d\n", l.modelo, l.marca, l.ano);
 }
 
+// não estou usando
 void lerString(char s[], int t)
 {
     // limpaBuffer();
@@ -27,6 +62,7 @@ void lerString(char s[], int t)
     s[strcspn(s, "\n")] = 0;
 }
 
+// não estou usando
 void apagacarro1(struct MCarro *l)
 {
     strcpy(l->modelo, "");
@@ -34,6 +70,7 @@ void apagacarro1(struct MCarro *l)
     l->ano = 0;
 }
 
+// não estou usando
 void limpaTela()
 {
     printf("\33[H\33[2J");
