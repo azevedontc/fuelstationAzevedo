@@ -236,7 +236,7 @@ int main()
                 printf("\n Modelo do carro que foi removido: %s \n", carro1[0].modelo);
                 printf(" Marca do carro que foi removido: %s \n", carro1[0].marca);
                 printf(" Ano do carro que foi removido: %d \n", carro1[0].ano);
-                printf(" Tamando do tanque do carro que foi removido: %d \n", carro1[0].tanque);
+                printf(" Tamanho do tanque do carro que foi removido: %d \n", carro1[0].tanque);
                 for (int i = 0; i < quant; i++)
                 {
                     carro1[i] = carro1[i + 1];
