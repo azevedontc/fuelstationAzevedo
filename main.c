@@ -5,8 +5,6 @@
 #include "function.h"
 #include "header.h"
 
-// último código
-
 int main()
 {
     // variáveis gerais
