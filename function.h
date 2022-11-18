@@ -70,7 +70,7 @@ void apagacarro1(struct MCarro *l)
     l->ano = 0;
 }
 
-// não estou usando pesa muito o código
+// não estou usando
 void limpaTela()
 {
     printf("\33[H\33[2J");
@@ -89,7 +89,7 @@ int op1(int quant, int tam)
     if (quant < tam)
     {
         quant++;
-        printf(C_GREEN "\n Carro adicionado com sucesso !" C_RESET);
+        printf(C_RED "\n Carro adicionado com sucesso !" C_RESET);
         printf("\n");
         printf("\n Tamanho atual da fila %d !", quant);
         printf("\n");
@@ -114,7 +114,7 @@ int op3(int quant, int tam)
     if (quant > 0)
     {
         quant--;
-        printf(C_GREEN "\n Obrigado, seu carro ja esta fora da fila !" C_RESET);
+        printf(C_RED "\n Obrigado, seu carro ja esta fora da fila !" C_RESET);
         printf("\n");
         printf("\n Tamanho atual da fila %d !", quant);
         printf("\n");
